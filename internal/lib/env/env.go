@@ -9,8 +9,13 @@ type App struct {
 	Stage AppStage
 }
 
+type Http struct {
+	Port string
+}
+
 type Env struct {
-	App App
+	App  App
+	Http Http
 }
 
 func FromEnvVars() (*Env, error) {
@@ -19,11 +24,23 @@ func FromEnvVars() (*Env, error) {
 	if err != nil {
 		return nil, err
 	}
+	httpPort := os.Getenv("HTTP_PORT")
 
 	return &Env{
 		App: App{
 			Name:  appName,
 			Stage: appStage,
 		},
+		Http: Http{
+			Port: httpPort,
+		},
 	}, nil
+}
+
+func (e *Env) IsDevelopment() bool {
+	return e.App.Stage == AppStageDev || e.App.Stage == AppStageTest
+}
+
+func (e *Env) IsProduction() bool {
+	return e.App.Stage == AppStageProd
 }
