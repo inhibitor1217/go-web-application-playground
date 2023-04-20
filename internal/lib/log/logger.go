@@ -6,13 +6,26 @@ import (
 )
 
 type Logger struct {
-	zap *fxevent.ZapLogger
+	fx  *fxevent.ZapLogger
+	zap *zap.Logger
 }
 
 func NewLogger(logger *zap.Logger) *Logger {
-	return &Logger{zap: &fxevent.ZapLogger{Logger: logger}}
+	return &Logger{fx: &fxevent.ZapLogger{Logger: logger}, zap: logger}
 }
 
 func (l *Logger) LogEvent(event fxevent.Event) {
-	l.zap.LogEvent(event)
+	l.fx.LogEvent(event)
+}
+
+func (l *Logger) Debug(msg string, details ...Field) {
+	l.zap.Debug(msg, zapFields(details)...)
+}
+
+func (l *Logger) Info(msg string, details ...Field) {
+	l.zap.Info(msg, zapFields(details)...)
+}
+
+func (l *Logger) Fatal(msg string, details ...Field) {
+	l.zap.Fatal(msg, zapFields(details)...)
 }
