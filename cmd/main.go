@@ -1,8 +1,9 @@
 package main
 
 import (
-	log "github.com/inhibitor1217/go-web-application-playground/internal/lib/log"
-	zap "github.com/inhibitor1217/go-web-application-playground/internal/service/zap"
+	"github.com/inhibitor1217/go-web-application-playground/internal/lib/log"
+	"github.com/inhibitor1217/go-web-application-playground/internal/service/godotenv"
+	"github.com/inhibitor1217/go-web-application-playground/internal/service/zap"
 
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxevent"
@@ -18,6 +19,7 @@ func main() {
 		log.Option,
 
 		// internal/service
+		godotenv.Option,
 		zap.Option,
 	).Run()
 }

@@ -1,4 +1,5 @@
 PROJECT_PATH := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+STAGE ?= development
 TARGET ?= ./target
 TARGET_BIN ?= ${TARGET}/bin/$(shell basename ${PROJECT_PATH})
 
@@ -9,7 +10,7 @@ build: init
 	go build -o ${TARGET_BIN} ${PROJECT_PATH}/cmd
 
 run:
-	${TARGET_BIN}
+	STAGE=${STAGE} ${TARGET_BIN}
 
 clean:
 	rm -rf ${TARGET}
