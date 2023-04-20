@@ -7,32 +7,44 @@ import (
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/env"
 )
 
-type HttpServerConfig struct {
+type ServerConfig struct {
 	Host string
 	Port string
 }
 
-type HttpServer struct {
+type Server struct {
 	engine *gin.Engine
-	config HttpServerConfig
+	config ServerConfig
 }
 
-func NewHttpServer(e *env.Env) (*HttpServer, error) {
+const (
+	allHost = "0.0.0.0"
+)
+
+func NewServer(routes []Routes, e *env.Env) (*Server, error) {
 	gin.SetMode(selectMode(e))
-	return &HttpServer{
+
+	server := &Server{
 		engine: gin.Default(),
-		config: HttpServerConfig{
-			Host: "0.0.0.0",
+		config: ServerConfig{
+			Host: allHost,
 			Port: e.Http.Port,
 		},
-	}, nil
+	}
+
+	for _, route := range routes {
+		path := route.Path()
+		route.Register(server.engine.Group(path))
+	}
+
+	return server, nil
 }
 
-func (s *HttpServer) Addr() string {
+func (s *Server) Addr() string {
 	return fmt.Sprintf("%s:%s", s.config.Host, s.config.Port)
 }
 
-func (s *HttpServer) Run() error {
+func (s *Server) Run() error {
 	return s.engine.Run(s.Addr())
 }
 
