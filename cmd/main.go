@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/inhibitor1217/go-web-application-playground/api/public"
-	"github.com/inhibitor1217/go-web-application-playground/docs"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/env"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/http"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/log"
@@ -17,7 +16,6 @@ func main() {
 		public.NewHttpServerModule(),
 
 		fx.Invoke(runServer),
-		fx.Invoke(fillDocsInfo),
 	).Run()
 }
 
@@ -27,10 +25,4 @@ func runServer(s *http.Server, e *env.Env, l *log.Logger) {
 	if err := s.Run(); err != nil {
 		l.Fatal("Failed to run http server", log.Error(err))
 	}
-}
-
-func fillDocsInfo(e *env.Env) {
-	docs.SwaggerInfo.Title = e.App.Name
-	docs.SwaggerInfo.Host = e.Http.BaseUrl
-	docs.SwaggerInfo.Version = e.App.Build
 }

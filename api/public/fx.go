@@ -2,6 +2,7 @@ package public
 
 import (
 	"github.com/inhibitor1217/go-web-application-playground/api/public/routes"
+	"github.com/inhibitor1217/go-web-application-playground/internal/lib/docs"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/env"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/http"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/log"
@@ -16,6 +17,7 @@ func NewHttpServerModule() fx.Option {
 		"http-api",
 
 		// internal/lib
+		docs.Option,
 		env.Option,
 		log.Option,
 
