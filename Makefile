@@ -13,5 +13,14 @@ build: init
 run:
 	APP_BUILD=${GIT_REF} STAGE=${STAGE} ${TARGET_BIN}
 
-clean:
+.PHONY: docs
+docs:
+	swag init -g cmd/main.go -o docs
+
+clean: clean/build clean/docs
+
+clean/build:
 	rm -rf ${TARGET}
+
+clean/docs:
+	rm -rf docs/

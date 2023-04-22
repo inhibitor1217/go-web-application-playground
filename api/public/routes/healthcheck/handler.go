@@ -24,6 +24,14 @@ func (h *Handler) Register(r http.Router) {
 	r.GET("", h.healthcheck)
 }
 
+// healthcheck godoc
+// @Summary Healthcheck
+// @Description Checks if the application is healthy
+// @Tags Utility
+// @Accept json
+// @Produce json
+// @Success 200 {object} HealthcheckView
+// @Router /healthcheck [get]
 func (h *Handler) healthcheck(cx *gin.Context) {
 	cx.JSON(http.OK, HealthcheckView{
 		AppName:  h.env.App.Name,

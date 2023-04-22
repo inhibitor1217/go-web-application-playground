@@ -11,7 +11,8 @@ type App struct {
 }
 
 type Http struct {
-	Port string
+	BaseUrl string
+	Port    string
 }
 
 type Env struct {
@@ -26,6 +27,7 @@ func FromEnvVars() (*Env, error) {
 		return nil, err
 	}
 	appBuild := os.Getenv("APP_BUILD")
+	httpBaseUrl := os.Getenv("HTTP_BASE_URL")
 	httpPort := os.Getenv("HTTP_PORT")
 
 	return &Env{
@@ -35,7 +37,8 @@ func FromEnvVars() (*Env, error) {
 			Build: appBuild,
 		},
 		Http: Http{
-			Port: httpPort,
+			BaseUrl: httpBaseUrl,
+			Port:    httpPort,
 		},
 	}, nil
 }

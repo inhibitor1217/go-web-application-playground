@@ -1,0 +1,48 @@
+definitions:
+  healthcheck.HealthcheckView:
+    properties:
+      app_build:
+        type: string
+      app_name:
+        type: string
+      app_stage:
+        type: string
+    required:
+    - app_build
+    - app_name
+    - app_stage
+    type: object
+info:
+  contact: {}
+paths:
+  /healthcheck:
+    get:
+      consumes:
+      - application/json
+      description: Checks if the application is healthy
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/healthcheck.HealthcheckView'
+      summary: Healthcheck
+      tags:
+      - Utility
+  /ping:
+    get:
+      consumes:
+      - application/json
+      description: Ping
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: pong
+          schema:
+            type: string
+      summary: Ping
+      tags:
+      - Utility
+swagger: "2.0"

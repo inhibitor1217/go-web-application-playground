@@ -19,6 +19,14 @@ func (h *Handler) Register(r http.Router) {
 	r.GET("", h.ping)
 }
 
+// ping godoc
+// @Summary Ping
+// @Description Ping
+// @Tags Utility
+// @Accept json
+// @Produce json
+// @Success 200 {string} string "pong"
+// @Router /ping [get]
 func (h *Handler) ping(cx *gin.Context) {
 	cx.JSON(http.OK, "pong")
 }
