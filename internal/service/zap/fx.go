@@ -2,7 +2,6 @@ package zap
 
 import (
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/env"
-
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 )

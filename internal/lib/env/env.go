@@ -7,6 +7,7 @@ import (
 type App struct {
 	Name  string
 	Stage AppStage
+	Build string
 }
 
 type Http struct {
@@ -24,12 +25,14 @@ func FromEnvVars() (*Env, error) {
 	if err != nil {
 		return nil, err
 	}
+	appBuild := os.Getenv("APP_BUILD")
 	httpPort := os.Getenv("HTTP_PORT")
 
 	return &Env{
 		App: App{
 			Name:  appName,
 			Stage: appStage,
+			Build: appBuild,
 		},
 		Http: Http{
 			Port: httpPort,

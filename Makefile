@@ -1,3 +1,4 @@
+GIT_REF := $(shell git rev-parse --short HEAD)
 PROJECT_PATH := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 STAGE ?= development
 TARGET ?= ./target
@@ -10,7 +11,7 @@ build: init
 	go build -o ${TARGET_BIN} ${PROJECT_PATH}/cmd
 
 run:
-	STAGE=${STAGE} ${TARGET_BIN}
+	APP_BUILD=${GIT_REF} STAGE=${STAGE} ${TARGET_BIN}
 
 clean:
 	rm -rf ${TARGET}

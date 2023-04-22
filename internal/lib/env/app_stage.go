@@ -10,6 +10,10 @@ const (
 	AppStageTest AppStage = "test"
 )
 
+func (s AppStage) String() string {
+	return string(s)
+}
+
 func parseAppStage(s string) (AppStage, error) {
 	switch s {
 	case "development":

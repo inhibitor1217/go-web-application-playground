@@ -1,9 +1,8 @@
 package ping
 
 import (
-	"github.com/inhibitor1217/go-web-application-playground/internal/lib/http"
-
 	"github.com/gin-gonic/gin"
+	"github.com/inhibitor1217/go-web-application-playground/internal/lib/http"
 )
 
 type Handler struct{}
