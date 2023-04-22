@@ -4,7 +4,8 @@ STAGE ?= development
 TARGET ?= ./target
 TARGET_BIN ?= ${TARGET}/bin/$(shell basename ${PROJECT_PATH})
 
-init:
+init: pre-commit/setup
+	@echo "Installing dependencies ..."
 	go mod download
 
 build: init
@@ -18,7 +19,15 @@ docs:
 	swag init -g cmd/main.go -o docs
 
 docs/fmt:
+	@echo "Formatting docs ..."
 	swag fmt -d ./
+
+pre-commit: docs/fmt
+
+pre-commit/setup:
+	@echo "Setting up pre-commit hook ..."
+	cp .githooks/pre-commit .git/hooks/pre-commit
+	chmod +x .git/hooks/pre-commit
 
 clean: clean/build clean/docs
 
