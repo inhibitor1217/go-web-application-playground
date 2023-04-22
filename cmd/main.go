@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/inhibitor1217/go-web-application-playground/api/public"
-	"github.com/inhibitor1217/go-web-application-playground/internal/lib/env"
+	"github.com/inhibitor1217/go-web-application-playground/api/swagger"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/http"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/log"
 	"github.com/inhibitor1217/go-web-application-playground/internal/service/godotenv"
@@ -14,14 +14,24 @@ func main() {
 
 	fx.New(
 		public.NewHttpServerModule(),
+		swagger.NewSwaggerModule(),
 
-		fx.Invoke(runServer),
+		fx.Invoke(
+			fx.Annotate(
+				runServers,
+				fx.ParamTags(`group:"servers"`),
+			),
+		),
 	).Run()
 }
 
-func runServer(s *http.Server, e *env.Env, l *log.Logger) {
-	l.Info("Starting http server", log.String("app_name", e.App.Name), log.String("app_stage", string(e.App.Stage)), log.String("http_addr", s.Addr()))
+func runServers(s []*http.Server, l *log.Logger) {
+	for _, s := range s {
+		go runServer(s, l)
+	}
+}
 
+func runServer(s *http.Server, l *log.Logger) {
 	if err := s.Run(); err != nil {
 		l.Fatal("Failed to run http server", log.Error(err))
 	}

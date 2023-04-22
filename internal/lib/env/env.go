@@ -10,14 +10,20 @@ type App struct {
 	Build string
 }
 
-type Http struct {
+type PublicHttp struct {
+	BaseUrl string
+	Port    string
+}
+
+type Swagger struct {
 	BaseUrl string
 	Port    string
 }
 
 type Env struct {
-	App  App
-	Http Http
+	App        App
+	PublicHttp PublicHttp
+	Swagger    Swagger
 }
 
 func FromEnvVars() (*Env, error) {
@@ -27,8 +33,10 @@ func FromEnvVars() (*Env, error) {
 		return nil, err
 	}
 	appBuild := os.Getenv("APP_BUILD")
-	httpBaseUrl := os.Getenv("HTTP_BASE_URL")
-	httpPort := os.Getenv("HTTP_PORT")
+	publicHttpBaseUrl := os.Getenv("PUBLIC_HTTP_BASE_URL")
+	publicHttpPort := os.Getenv("PUBLIC_HTTP_PORT")
+	swaggerBaseUrl := os.Getenv("SWAGGER_BASE_URL")
+	swaggerPort := os.Getenv("SWAGGER_PORT")
 
 	return &Env{
 		App: App{
@@ -36,9 +44,13 @@ func FromEnvVars() (*Env, error) {
 			Stage: appStage,
 			Build: appBuild,
 		},
-		Http: Http{
-			BaseUrl: httpBaseUrl,
-			Port:    httpPort,
+		PublicHttp: PublicHttp{
+			BaseUrl: publicHttpBaseUrl,
+			Port:    publicHttpPort,
+		},
+		Swagger: Swagger{
+			BaseUrl: swaggerBaseUrl,
+			Port:    swaggerPort,
 		},
 	}, nil
 }

@@ -14,15 +14,18 @@ build: init
 run:
 	APP_BUILD=${GIT_REF} STAGE=${STAGE} ${TARGET_BIN}
 
+docs: docs/generate
+
 .PHONY: docs
-docs:
+docs/generate:
 	swag init -g cmd/main.go -o docs
 
 docs/fmt:
 	@echo "Formatting docs ..."
 	swag fmt -d ./
 
-pre-commit: docs/fmt
+pre-commit: docs/fmt docs/generate
+	git add .
 
 pre-commit/setup:
 	@echo "Setting up pre-commit hook ..."

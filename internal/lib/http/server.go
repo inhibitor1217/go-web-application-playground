@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/env"
+	"github.com/inhibitor1217/go-web-application-playground/internal/lib/log"
 )
 
 type ServerConfig struct {
@@ -21,14 +22,14 @@ const (
 	allHost = "0.0.0.0"
 )
 
-func NewServer(routes []Routes, e *env.Env) (*Server, error) {
+func NewServer(routes []Routes, port string, e *env.Env, l *log.Logger) (*Server, error) {
 	gin.SetMode(selectMode(e))
 
 	server := &Server{
 		engine: gin.Default(),
 		config: ServerConfig{
 			Host: allHost,
-			Port: e.Http.Port,
+			Port: port,
 		},
 	}
 

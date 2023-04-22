@@ -2,22 +2,19 @@ package public
 
 import (
 	"github.com/inhibitor1217/go-web-application-playground/api/public/routes"
-	"github.com/inhibitor1217/go-web-application-playground/internal/lib/docs"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/env"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/http"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/log"
 	"github.com/inhibitor1217/go-web-application-playground/internal/service/zap"
-
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxevent"
 )
 
 func NewHttpServerModule() fx.Option {
 	return fx.Module(
-		"http-api",
+		"public-api",
 
 		// internal/lib
-		docs.Option,
 		env.Option,
 		log.Option,
 
@@ -33,8 +30,18 @@ func NewHttpServerModule() fx.Option {
 
 		fx.Provide(
 			fx.Annotate(
+				func(e *env.Env) string {
+					return e.PublicHttp.Port
+				},
+				fx.ResultTags(`name:"public-api:http-port"`),
+			),
+		),
+
+		fx.Provide(
+			fx.Annotate(
 				http.NewServer,
-				fx.ParamTags(`group:"routes"`),
+				fx.ParamTags(`group:"routes:public"`, `name:"public-api:http-port"`),
+				fx.ResultTags(`group:"servers"`, `name:"public-api"`),
 			),
 		),
 	)
