@@ -17,6 +17,9 @@ run:
 docs:
 	swag init -g cmd/main.go -o docs
 
+docs/fmt:
+	swag fmt -d ./
+
 clean: clean/build clean/docs
 
 clean/build:
