@@ -13,7 +13,7 @@ type ErrorView[T interface{}] struct {
 }
 
 func ClientError[T interface{}](cx *gin.Context, e ErrorView[T]) {
-	cx.AbortWithStatusJSON(http.StatusBadRequest, e)
+	cx.JSON(http.StatusBadRequest, e)
 }
 
 func ValidationError(cx *gin.Context, err error) {
@@ -22,7 +22,7 @@ func ValidationError(cx *gin.Context, err error) {
 		Message: err.Error(),
 	}
 
-	cx.AbortWithStatusJSON(http.StatusBadRequest, e)
+	cx.JSON(http.StatusBadRequest, e)
 }
 
 func Panic(cx *gin.Context, err error) {
@@ -31,5 +31,5 @@ func Panic(cx *gin.Context, err error) {
 		Message: "Internal server error",
 	}
 
-	cx.AbortWithStatusJSON(http.StatusInternalServerError, e)
+	cx.JSON(http.StatusInternalServerError, e)
 }

@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/inhibitor1217/go-web-application-playground/api/public/lib"
 	"github.com/inhibitor1217/go-web-application-playground/api/public/views"
 	"github.com/inhibitor1217/go-web-application-playground/internal/features/account"
 )
@@ -40,9 +41,9 @@ func (h *Handler) SignUp(cx *gin.Context) {
 		return
 	}
 
-	exists, err := h.accountSvc.ExistsOfEmail(req.Email)
+	exists, err := h.accountSvc.ExistsOfEmail(cx.Request.Context(), req.Email)
 	if err != nil {
-		views.Panic(cx, err)
+		lib.Panic(cx, err, h.l)
 		return
 	}
 
@@ -57,14 +58,14 @@ func (h *Handler) SignUp(cx *gin.Context) {
 		return
 	}
 
-	a, err := h.accountSvc.Create(&account.CreateDTO{
+	a, err := h.accountSvc.Create(cx.Request.Context(), &account.CreateDTO{
 		Email:       req.Email,
 		Password:    req.Password,
 		DisplayName: req.DisplayName,
 	})
 
 	if err != nil {
-		views.Panic(cx, err)
+		lib.Panic(cx, err, h.l)
 		return
 	}
 
@@ -100,9 +101,9 @@ func (h *Handler) SignIn(cx *gin.Context) {
 		return
 	}
 
-	a, err := h.accountSvc.FindByEmail(req.Email)
+	a, err := h.accountSvc.FindByEmail(cx.Request.Context(), req.Email)
 	if err != nil {
-		views.Panic(cx, err)
+		lib.Panic(cx, err, h.l)
 		return
 	}
 	if a == nil {

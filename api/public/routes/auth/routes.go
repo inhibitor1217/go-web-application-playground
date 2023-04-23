@@ -3,17 +3,21 @@ package auth
 import (
 	"github.com/inhibitor1217/go-web-application-playground/internal/features/account"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/http"
+	"github.com/inhibitor1217/go-web-application-playground/internal/lib/log"
 )
 
 type Handler struct {
-	accountSvc *account.Service
+	accountSvc account.Service
+	l          *log.Logger
 }
 
 func NewHandler(
-	accountSvc *account.Service,
+	accountSvc account.Service,
+	l *log.Logger,
 ) *Handler {
 	return &Handler{
 		accountSvc: accountSvc,
+		l:          l,
 	}
 }
 

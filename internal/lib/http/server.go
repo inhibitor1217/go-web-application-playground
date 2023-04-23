@@ -4,8 +4,6 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/inhibitor1217/go-web-application-playground/internal/lib/env"
-	"github.com/inhibitor1217/go-web-application-playground/internal/lib/log"
 )
 
 type ServerConfig struct {
@@ -22,8 +20,9 @@ const (
 	allHost = "0.0.0.0"
 )
 
-func NewServer(routes []Routes, middlewares []Middleware, port string, e *env.Env, l *log.Logger) (*Server, error) {
-	gin.SetMode(selectMode(e))
+func NewServer(routes []Routes, middlewares []Middleware, port string) (*Server, error) {
+	// TODO
+	gin.SetMode(gin.DebugMode)
 
 	server := &Server{
 		engine: gin.Default(),
@@ -51,12 +50,4 @@ func (s *Server) Addr() string {
 
 func (s *Server) Run() error {
 	return s.engine.Run(s.Addr())
-}
-
-func selectMode(e *env.Env) string {
-	if e.IsDevelopment() {
-		return gin.DebugMode
-	} else {
-		return gin.ReleaseMode
-	}
 }

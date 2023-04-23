@@ -22,7 +22,7 @@ func NewCors(e *env.Env) *Cors {
 				return false
 			}
 		},
-		ExposeHeaders:    []string{"Content-Length", "Content-Type"},
+		ExposeHeaders:    []string{"Content-Length", "Content-Type", "X-Request-Id"},
 		AllowCredentials: true,
 	})
 
