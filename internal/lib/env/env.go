@@ -1,6 +1,7 @@
 package env
 
 import (
+	"net/url"
 	"os"
 )
 
@@ -11,12 +12,12 @@ type App struct {
 }
 
 type PublicHttp struct {
-	BaseUrl string
+	BaseUrl *url.URL
 	Port    string
 }
 
 type Swagger struct {
-	BaseUrl string
+	BaseUrl *url.URL
 	Port    string
 }
 
@@ -33,9 +34,17 @@ func FromEnvVars() (*Env, error) {
 		return nil, err
 	}
 	appBuild := os.Getenv("APP_BUILD")
-	publicHttpBaseUrl := os.Getenv("PUBLIC_HTTP_BASE_URL")
+
+	publicHttpBaseUrl, err := url.Parse(os.Getenv("PUBLIC_HTTP_BASE_URL"))
+	if err != nil {
+		return nil, err
+	}
 	publicHttpPort := os.Getenv("PUBLIC_HTTP_PORT")
-	swaggerBaseUrl := os.Getenv("SWAGGER_BASE_URL")
+
+	swaggerBaseUrl, err := url.Parse(os.Getenv("SWAGGER_BASE_URL"))
+	if err != nil {
+		return nil, err
+	}
 	swaggerPort := os.Getenv("SWAGGER_PORT")
 
 	return &Env{

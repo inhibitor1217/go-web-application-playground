@@ -12,6 +12,6 @@ var Option = fx.Option(
 
 func fillDocsInfo(e *env.Env) {
 	docs.SwaggerInfo.Title = e.App.Name
-	docs.SwaggerInfo.Host = e.PublicHttp.BaseUrl
+	docs.SwaggerInfo.Host = e.PublicHttp.BaseUrl.Host
 	docs.SwaggerInfo.Version = e.App.Build
 }
