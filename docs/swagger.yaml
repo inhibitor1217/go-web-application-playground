@@ -1,5 +1,5 @@
 definitions:
-  healthcheck.healthcheck.view:
+  healthcheck.Healthcheck.view:
     properties:
       app_build:
         type: string
@@ -22,7 +22,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/healthcheck.healthcheck.view'
+            $ref: '#/definitions/healthcheck.Healthcheck.view'
       summary: Healthcheck
       tags:
       - Utility

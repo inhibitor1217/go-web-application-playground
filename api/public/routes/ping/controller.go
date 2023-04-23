@@ -5,21 +5,7 @@ import (
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/http"
 )
 
-type Handler struct{}
-
-func NewHandler() *Handler {
-	return &Handler{}
-}
-
-func (h *Handler) Path() string {
-	return "/ping"
-}
-
-func (h *Handler) Register(r http.Router) {
-	r.GET("", h.ping)
-}
-
-// ping godoc
+// Ping godoc
 //
 //	@Summary		Ping
 //	@Description	Ping
@@ -28,6 +14,6 @@ func (h *Handler) Register(r http.Router) {
 //	@Produce		json
 //	@Success		200	{string}	string	"pong"
 //	@Router			/ping [get]
-func (h *Handler) ping(cx *gin.Context) {
+func (h *Handler) Ping(cx *gin.Context) {
 	cx.JSON(http.OK, "pong")
 }

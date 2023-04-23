@@ -21,7 +21,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/healthcheck.healthcheck.view"
+                            "$ref": "#/definitions/healthcheck.Healthcheck.view"
                         }
                     }
                 }
@@ -52,7 +52,7 @@
         }
     },
     "definitions": {
-        "healthcheck.healthcheck.view": {
+        "healthcheck.Healthcheck.view": {
             "type": "object",
             "properties": {
                 "app_build": {

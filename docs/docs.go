@@ -33,7 +33,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/healthcheck.healthcheck.view"
+                            "$ref": "#/definitions/healthcheck.Healthcheck.view"
                         }
                     }
                 }
@@ -64,7 +64,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "healthcheck.healthcheck.view": {
+        "healthcheck.Healthcheck.view": {
             "type": "object",
             "properties": {
                 "app_build": {
