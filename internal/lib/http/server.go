@@ -22,7 +22,7 @@ const (
 	allHost = "0.0.0.0"
 )
 
-func NewServer(routes []Routes, port string, e *env.Env, l *log.Logger) (*Server, error) {
+func NewServer(routes []Routes, middlewares []Middleware, port string, e *env.Env, l *log.Logger) (*Server, error) {
 	gin.SetMode(selectMode(e))
 
 	server := &Server{
@@ -31,6 +31,10 @@ func NewServer(routes []Routes, port string, e *env.Env, l *log.Logger) (*Server
 			Host: allHost,
 			Port: port,
 		},
+	}
+
+	for _, middleware := range middlewares {
+		server.engine.Use(middleware.Handler())
 	}
 
 	for _, route := range routes {

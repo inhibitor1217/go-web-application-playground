@@ -34,7 +34,7 @@ func NewSwaggerModule() fx.Option {
 		fx.Provide(
 			fx.Annotate(
 				http.NewServer,
-				fx.ParamTags(`group:"routes:swagger"`, `name:"swagger:http-port"`),
+				fx.ParamTags(`group:"routes:swagger"`, `group:"middlewares:swagger"`, `name:"swagger:http-port"`),
 				fx.ResultTags(`group:"servers"`, `name:"swagger"`),
 			),
 		),

@@ -1,6 +1,7 @@
 package public
 
 import (
+	"github.com/inhibitor1217/go-web-application-playground/api/public/middlewares"
 	"github.com/inhibitor1217/go-web-application-playground/api/public/routes"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/env"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/http"
@@ -21,6 +22,9 @@ func NewHttpServerModule() fx.Option {
 		// internal/service
 		zap.Option,
 
+		// middlewares
+		middlewares.Option,
+
 		// routes
 		routes.Option,
 
@@ -40,7 +44,7 @@ func NewHttpServerModule() fx.Option {
 		fx.Provide(
 			fx.Annotate(
 				http.NewServer,
-				fx.ParamTags(`group:"routes:public"`, `name:"public-api:http-port"`),
+				fx.ParamTags(`group:"routes:public"`, `group:"middlewares:public"`, `name:"public-api:http-port"`),
 				fx.ResultTags(`group:"servers"`, `name:"public-api"`),
 			),
 		),
