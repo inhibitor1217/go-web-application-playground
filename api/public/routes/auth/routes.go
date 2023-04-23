@@ -23,10 +23,7 @@ func (h *Handler) Path() string {
 
 func (h *Handler) Register(r http.Router) {
 	r.POST("/sign-up", h.SignUp)
-
 	r.POST("/sign-in", h.SignIn)
-
 	r.POST("/touch", h.Touch)
-
 	r.DELETE("/sign-out", h.SignOut)
 }

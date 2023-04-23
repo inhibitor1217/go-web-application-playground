@@ -1,4 +1,14 @@
 definitions:
+  auth.SignIn.request:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
   auth.SignUp.accountExists:
     properties:
       email:
@@ -63,11 +73,48 @@ definitions:
 info:
   contact: {}
 paths:
+  /auth/sign-in:
+    post:
+      consumes:
+      - application/json
+      description: Signs in to an account using email and password.
+      parameters:
+      - description: Request body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/auth.SignIn.request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.SignUp.ok'
+        "401":
+          description: Unauthorized
+      summary: Sign in (login)
+      tags:
+      - Authentication
+  /auth/sign-out:
+    post:
+      consumes:
+      - application/json
+      description: Signs out from the account session.
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+      summary: Sign out (logout)
+      tags:
+      - Authentication
   /auth/sign-up:
     post:
       consumes:
       - application/json
-      description: Register a new account
+      description: Registers a new account.
       parameters:
       - description: Request body
         in: body
@@ -86,7 +133,22 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/views.ErrorView-auth_SignUp_accountExists'
-      summary: Sign up
+      summary: Sign up (register)
+      tags:
+      - Authentication
+  /auth/touch:
+    post:
+      consumes:
+      - application/json
+      description: Touches the account session and renews tokens.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.SignUp.ok'
+      summary: Touch
       tags:
       - Authentication
   /healthcheck:

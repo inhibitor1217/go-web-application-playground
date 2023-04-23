@@ -16,9 +16,9 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/auth/sign-up": {
+        "/auth/sign-in": {
             "post": {
-                "description": "Register a new account",
+                "description": "Signs in to an account using email and password.",
                 "consumes": [
                     "application/json"
                 ],
@@ -28,7 +28,64 @@ const docTemplate = `{
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "Sign up",
+                "summary": "Sign in (login)",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/auth.SignIn.request"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/auth.SignUp.ok"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/auth/sign-out": {
+            "post": {
+                "description": "Signs out from the account session.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Sign out (logout)",
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
+        "/auth/sign-up": {
+            "post": {
+                "description": "Registers a new account.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Sign up (register)",
                 "parameters": [
                     {
                         "description": "Request body",
@@ -51,6 +108,29 @@ const docTemplate = `{
                         "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/views.ErrorView-auth_SignUp_accountExists"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/touch": {
+            "post": {
+                "description": "Touches the account session and renews tokens.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Touch",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/auth.SignUp.ok"
                         }
                     }
                 }
@@ -104,6 +184,21 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "auth.SignIn.request": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
         "auth.SignUp.accountExists": {
             "type": "object",
             "properties": {

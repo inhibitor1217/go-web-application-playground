@@ -10,8 +10,8 @@ import (
 
 // SignUp godoc
 //
-//	@Summary		Sign up
-//	@Description	Register a new account
+//	@Summary		Sign up (register)
+//	@Description	Registers a new account.
 //	@Tags			Authentication
 //	@Accept			json
 //	@Produce		json
@@ -73,14 +73,56 @@ func (h *Handler) SignUp(cx *gin.Context) {
 	})
 }
 
+// SignIn godoc
+//
+//	@Summary		Sign in (login)
+//	@Description	Signs in to an account using email and password.
+//	@Tags			Authentication
+//	@Accept			json
+//	@Produce		json
+//	@Param			body	body		auth.SignIn.request	true	"Request body"
+//	@Success		200		{object}	auth.SignUp.ok
+//	@Failure		401
+//	@Router			/auth/sign-in [post]
 func (h *Handler) SignIn(cx *gin.Context) {
+	type request struct {
+		Email    string `json:"email" binding:"required"`
+		Password string `json:"password" binding:"required"`
+	}
+
+	type ok struct {
+		Account views.AccountView `json:"account"`
+	}
+
 	cx.JSON(http.StatusNotImplemented, "Not implemented")
 }
 
+// Touch godoc
+//
+//	@Summary		Touch
+//	@Description	Touches the account session and renews tokens.
+//	@Tags			Authentication
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	auth.SignUp.ok
+//	@Router			/auth/touch [post]
 func (h *Handler) Touch(cx *gin.Context) {
+	type ok struct {
+		Account views.AccountView `json:"account"`
+	}
+
 	cx.JSON(http.StatusNotImplemented, "Not implemented")
 }
 
+// SignOut godoc
+//
+//	@Summary		Sign out (logout)
+//	@Description	Signs out from the account session.
+//	@Tags			Authentication
+//	@Accept			json
+//	@Produce		json
+//	@Success		204
+//	@Router			/auth/sign-out [post]
 func (h *Handler) SignOut(cx *gin.Context) {
 	cx.JSON(http.StatusNotImplemented, "Not implemented")
 }

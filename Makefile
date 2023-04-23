@@ -14,6 +14,8 @@ build: init
 run:
 	APP_BUILD=${GIT_REF} STAGE=${STAGE} ${TARGET_BIN}
 
+dev: docs build run
+
 docs: docs/generate
 
 .PHONY: docs
