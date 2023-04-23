@@ -94,7 +94,29 @@ func (h *Handler) SignIn(cx *gin.Context) {
 		Account views.AccountView `json:"account"`
 	}
 
-	cx.JSON(http.StatusNotImplemented, "Not implemented")
+	req := request{}
+	if err := cx.ShouldBindJSON(&req); err != nil {
+		views.ValidationError(cx, err)
+		return
+	}
+
+	a, err := h.accountSvc.FindByEmail(req.Email)
+	if err != nil {
+		views.Panic(cx, err)
+		return
+	}
+	if a == nil {
+		cx.AbortWithStatus(http.StatusUnauthorized)
+		return
+	}
+
+	// TODO check password
+
+	cx.JSON(http.StatusOK, ok{
+		Account: views.NewAccountView(a),
+	})
+
+	// TODO set session tokens
 }
 
 // Touch godoc

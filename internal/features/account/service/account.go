@@ -25,3 +25,7 @@ func (svc *Service) Create(dto *CreateDTO) (*model.Account, error) {
 func (svc *Service) ExistsOfEmail(email string) (bool, error) {
 	return false, errors.New("TODO")
 }
+
+func (svc *Service) FindByEmail(email string) (*model.Account, error) {
+	return nil, errors.New("TODO")
+}
