@@ -1,8 +1,9 @@
 package ping
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
-	"github.com/inhibitor1217/go-web-application-playground/internal/lib/http"
 )
 
 // Ping godoc
@@ -15,5 +16,5 @@ import (
 //	@Success		200	{string}	string	"pong"
 //	@Router			/ping [get]
 func (h *Handler) Ping(cx *gin.Context) {
-	cx.JSON(http.OK, "pong")
+	cx.JSON(http.StatusOK, "pong")
 }

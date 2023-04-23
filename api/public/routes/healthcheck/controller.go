@@ -1,8 +1,9 @@
 package healthcheck
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
-	"github.com/inhibitor1217/go-web-application-playground/internal/lib/http"
 )
 
 // Healthcheck godoc
@@ -21,7 +22,7 @@ func (h *Handler) Healthcheck(cx *gin.Context) {
 		AppBuild string `json:"app_build"`
 	}
 
-	cx.JSON(http.OK, view{
+	cx.JSON(http.StatusOK, view{
 		AppName:  h.env.App.Name,
 		AppStage: h.env.App.Stage.String(),
 		AppBuild: h.env.App.Build,
