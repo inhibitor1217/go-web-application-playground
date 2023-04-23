@@ -18,7 +18,7 @@ docs: docs/generate
 
 .PHONY: docs
 docs/generate:
-	swag init -g cmd/main.go -o docs
+	swag init -d ./cmd,./api/public -o docs
 
 docs/fmt:
 	@echo "Formatting docs ..."

@@ -13,7 +13,7 @@ type Cors struct {
 func NewCors(e *env.Env) *Cors {
 	handler := cors.New(cors.Config{
 		AllowMethods: []string{"GET", "PATCH", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders: []string{"Origin"},
+		AllowHeaders: []string{"Content-Length", "Content-Type", "Origin"},
 		AllowOriginFunc: func(origin string) bool {
 			if e.IsDevelopment() {
 				return true
@@ -22,7 +22,7 @@ func NewCors(e *env.Env) *Cors {
 				return false
 			}
 		},
-		ExposeHeaders:    []string{"Content-Length"},
+		ExposeHeaders:    []string{"Content-Length", "Content-Type"},
 		AllowCredentials: true,
 	})
 

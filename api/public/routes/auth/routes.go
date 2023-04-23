@@ -1,13 +1,20 @@
 package auth
 
 import (
+	"github.com/inhibitor1217/go-web-application-playground/internal/features/account"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/http"
 )
 
-type Handler struct{}
+type Handler struct {
+	accountSvc *account.Service
+}
 
-func NewHandler() *Handler {
-	return &Handler{}
+func NewHandler(
+	accountSvc *account.Service,
+) *Handler {
+	return &Handler{
+		accountSvc: accountSvc,
+	}
 }
 
 func (h *Handler) Path() string {

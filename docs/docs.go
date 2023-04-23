@@ -16,6 +16,46 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/auth/sign-up": {
+            "post": {
+                "description": "Register a new account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Sign up",
+                "parameters": [
+                    {
+                        "description": "Request body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/auth.SignUp.request"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/auth.SignUp.ok"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/views.ErrorView-auth_SignUp_accountExists"
+                        }
+                    }
+                }
+            }
+        },
         "/healthcheck": {
             "get": {
                 "description": "Checks if the application is healthy",
@@ -64,6 +104,44 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "auth.SignUp.accountExists": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "auth.SignUp.ok": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "$ref": "#/definitions/views.AccountView"
+                }
+            }
+        },
+        "auth.SignUp.request": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "display_name": {
+                    "type": "string",
+                    "maxLength": 256,
+                    "minLength": 1
+                },
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 8
+                }
+            }
+        },
         "healthcheck.Healthcheck.view": {
             "type": "object",
             "properties": {
@@ -74,6 +152,46 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "app_stage": {
+                    "type": "string"
+                }
+            }
+        },
+        "views.AccountView": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "integer"
+                },
+                "display_name": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "touched_at": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
+        "views.ErrorView-auth_SignUp_accountExists": {
+            "type": "object",
+            "required": [
+                "type"
+            ],
+            "properties": {
+                "msg": {
+                    "type": "string"
+                },
+                "payload": {
+                    "$ref": "#/definitions/auth.SignUp.accountExists"
+                },
+                "type": {
                     "type": "string"
                 }
             }
