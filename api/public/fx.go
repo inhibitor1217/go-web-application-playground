@@ -7,6 +7,7 @@ import (
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/env"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/http"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/log"
+	"github.com/inhibitor1217/go-web-application-playground/internal/service/db/sql"
 	"github.com/inhibitor1217/go-web-application-playground/internal/service/zap"
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxevent"
@@ -21,6 +22,7 @@ func NewHttpServerModule() fx.Option {
 		log.Option,
 
 		// internal/service
+		sql.Option,
 		zap.Option,
 
 		// features

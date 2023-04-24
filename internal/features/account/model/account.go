@@ -2,6 +2,8 @@ package model
 
 import (
 	"time"
+
+	"github.com/inhibitor1217/go-web-application-playground/internal/lib/entity"
 )
 
 type Account struct {
@@ -20,4 +22,8 @@ func (a *Account) Identifier() string {
 
 func (a *Account) TypeName() string {
 	return "Account"
+}
+
+func (a *Account) String() string {
+	return entity.String(a)
 }
