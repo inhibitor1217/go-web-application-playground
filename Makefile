@@ -8,7 +8,11 @@ init: pre-commit/setup
 	@echo "Installing dependencies ..."
 	go mod download
 
-build: init
+	@echo "Setup containers for development ..."
+	docker-compose -f setup/docker-compose.yml build
+	docker-compose -f setup/docker-compose.yml up -d
+
+build:
 	go build -o ${TARGET_BIN} ${PROJECT_PATH}/cmd
 
 run:
@@ -41,3 +45,7 @@ clean/build:
 
 clean/docs:
 	rm -rf docs/
+
+shutdown:
+	@echo "Shutting down containers ..."
+	docker-compose -f $(dirname $0)/setup/docker-compose.yml down

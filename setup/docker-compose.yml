@@ -1,0 +1,15 @@
+# Used in local development.
+
+version: '3.8'
+
+services:
+  postgres:
+    build: './postgres'
+    container_name: playground_postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - './data/postgres:/var/lib/postgresql/data'
