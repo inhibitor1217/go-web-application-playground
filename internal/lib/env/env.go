@@ -17,15 +17,21 @@ type PSQL struct {
 	User     string
 	Password string
 	Database string
+	SSL      bool
 }
 
 func (p PSQL) DatasourceName() string {
+	sslmode := "disable"
+	if p.SSL {
+		sslmode = "verify-full"
+	}
 	return fmt.Sprintf(
-		"host=%s user=%s password=%s dbname=%s sslmode=require",
+		"host=%s user=%s password=%s dbname=%s sslmode=%s",
 		p.Host,
 		p.User,
 		p.Password,
 		p.Database,
+		sslmode,
 	)
 }
 
@@ -58,6 +64,7 @@ func FromEnvVars() (*Env, error) {
 	psqlUser := os.Getenv("PSQL_USER")
 	psqlPassword := os.Getenv("PSQL_PASSWORD")
 	psqlDatabase := os.Getenv("PSQL_DATABASE")
+	psqlSSL := os.Getenv("PSQL_SSL") == "true"
 
 	publicHttpBaseUrl, err := url.Parse(os.Getenv("PUBLIC_HTTP_BASE_URL"))
 	if err != nil {
@@ -82,6 +89,7 @@ func FromEnvVars() (*Env, error) {
 			User:     psqlUser,
 			Password: psqlPassword,
 			Database: psqlDatabase,
+			SSL:      psqlSSL,
 		},
 		PublicHttp: PublicHttp{
 			BaseUrl: publicHttpBaseUrl,

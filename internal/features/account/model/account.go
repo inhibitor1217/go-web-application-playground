@@ -12,8 +12,8 @@ type Account struct {
 	UpdatedAt    time.Time
 	Email        string
 	PasswordHash string
-	DisplayName  string
-	TouchedAt    time.Time
+	DisplayName  *string
+	TouchedAt    *time.Time
 }
 
 func (a *Account) Identifier() string {
