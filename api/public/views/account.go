@@ -1,6 +1,9 @@
 package views
 
-import "github.com/inhibitor1217/go-web-application-playground/internal/features/account"
+import (
+	"github.com/inhibitor1217/go-web-application-playground/internal/features/account"
+	"github.com/inhibitor1217/go-web-application-playground/internal/lib/nilable"
+)
 
 type AccountView struct {
 	Id          string     `json:"id"`
@@ -11,13 +14,13 @@ type AccountView struct {
 	TouchedAt   *Timestamp `json:"touched_at"`
 }
 
-func NewAccountView(a *account.Account) AccountView {
+func NewAccountView(a account.Account) AccountView {
 	return AccountView{
-		Id:          a.Id,
-		CreatedAt:   TimestampView(a.CreatedAt),
-		UpdatedAt:   TimestampView(a.UpdatedAt),
-		Email:       a.Email,
-		DisplayName: a.DisplayName,
-		TouchedAt:   NullableTimestampView(a.TouchedAt),
+		Id:          a.Id(),
+		CreatedAt:   TimestampView(a.CreatedAt()),
+		UpdatedAt:   TimestampView(a.UpdatedAt()),
+		Email:       a.Email(),
+		DisplayName: a.DisplayName(),
+		TouchedAt:   nilable.Map(a.TouchedAt(), TimestampView),
 	}
 }
