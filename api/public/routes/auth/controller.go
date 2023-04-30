@@ -111,7 +111,16 @@ func (h *Handler) SignIn(cx *gin.Context) {
 		return
 	}
 
-	// TODO check password
+	pass, err := account.ValidatePassword(a, req.Password)
+
+	if err != nil {
+		lib.Panic(cx, err, h.l)
+		return
+	}
+	if !pass {
+		cx.AbortWithStatus(http.StatusUnauthorized)
+		return
+	}
 
 	cx.JSON(http.StatusOK, ok{
 		Account: views.NewAccountView(a),

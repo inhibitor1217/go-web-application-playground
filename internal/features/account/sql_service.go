@@ -1,44 +1,30 @@
-package service
+package account
 
 import (
 	"context"
 	"database/sql"
 
 	"github.com/google/uuid"
-	"github.com/inhibitor1217/go-web-application-playground/internal/features/account/model"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/crypto"
 	"github.com/inhibitor1217/go-web-application-playground/internal/service/db/sql/sqlschema"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
 )
 
-type Service interface {
-	Find(cx context.Context, id string) (model.Account, error)
-	FindByEmail(cx context.Context, email string) (model.Account, error)
-	ExistsOfEmail(cx context.Context, email string) (bool, error)
-	Create(cx context.Context, dto *CreateDTO) (model.Account, error)
-}
-
-type CreateDTO struct {
-	Email       string
-	Password    string
-	DisplayName *string
-}
-
-type service struct {
+type sqlService struct {
 	sql *sqlx.DB
 }
 
-func NewService(
+func NewSQLService(
 	sql *sqlx.DB,
 ) Service {
 	// TODO wrap the service with ctx cancellation
-	return &service{
+	return &sqlService{
 		sql: sql,
 	}
 }
 
-func (svc *service) Find(cx context.Context, id string) (model.Account, error) {
+func (svc *sqlService) Find(cx context.Context, id string) (Account, error) {
 	a := sqlschema.Account{}
 	err := svc.sql.Get(
 		&a,
@@ -55,7 +41,7 @@ func (svc *service) Find(cx context.Context, id string) (model.Account, error) {
 	return &a, nil
 }
 
-func (svc *service) FindByEmail(cx context.Context, email string) (model.Account, error) {
+func (svc *sqlService) FindByEmail(cx context.Context, email string) (Account, error) {
 	a := sqlschema.Account{}
 	err := svc.sql.Get(
 		&a,
@@ -72,7 +58,7 @@ func (svc *service) FindByEmail(cx context.Context, email string) (model.Account
 	return &a, nil
 }
 
-func (svc *service) ExistsOfEmail(cx context.Context, email string) (bool, error) {
+func (svc *sqlService) ExistsOfEmail(cx context.Context, email string) (bool, error) {
 	a := sqlschema.Account{}
 	err := svc.sql.Get(
 		&a,
@@ -89,7 +75,7 @@ func (svc *service) ExistsOfEmail(cx context.Context, email string) (bool, error
 	return true, nil
 }
 
-func (svc *service) Create(cx context.Context, dto *CreateDTO) (model.Account, error) {
+func (svc *sqlService) Create(cx context.Context, dto *CreateDTO) (Account, error) {
 	passwordHash, err := crypto.Hash(dto.Password)
 	if err != nil {
 		return nil, errors.WithStack(err)
