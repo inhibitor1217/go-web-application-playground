@@ -2,7 +2,7 @@ package views
 
 import (
 	"github.com/inhibitor1217/go-web-application-playground/internal/features/account"
-	"github.com/inhibitor1217/go-web-application-playground/internal/lib/nilable"
+	"github.com/inhibitor1217/go-web-application-playground/internal/lib/optional"
 )
 
 type AccountView struct {
@@ -21,6 +21,6 @@ func NewAccountView(a account.Account) AccountView {
 		UpdatedAt:   TimestampView(a.UpdatedAt()),
 		Email:       a.Email(),
 		DisplayName: a.DisplayName(),
-		TouchedAt:   nilable.Map(a.TouchedAt(), TimestampView),
+		TouchedAt:   optional.Map(a.TouchedAt(), TimestampView),
 	}
 }
