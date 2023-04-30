@@ -1,59 +1,51 @@
 package sqlschema
 
-import "time"
+import (
+	"database/sql"
+	"time"
+)
 
 type Account struct {
-	id           string  `db:"id"`
-	createdAt    string  `db:"created_at"`
-	updatedAt    string  `db:"updated_at"`
-	email        string  `db:"email"`
-	passwordHash string  `db:"password_hash"`
-	displayName  *string `db:"display_name"`
-	touchedAt    *string `db:"touched_at"`
+	SId           string       `db:"id"`
+	SCreatedAt    time.Time    `db:"created_at"`
+	SUpdatedAt    time.Time    `db:"updated_at"`
+	SEmail        string       `db:"email"`
+	SPasswordHash string       `db:"password_hash"`
+	SDisplayName  *string      `db:"display_name"`
+	STouchedAt    sql.NullTime `db:"touched_at"`
+}
+
+func (a *Account) TypeName() string {
+	return "account"
 }
 
 func (a *Account) Id() string {
-	return a.id
+	return a.SId
 }
 
 func (a *Account) CreatedAt() time.Time {
-	createdAt, err := time.Parse(time.RFC3339, a.createdAt)
-	if err != nil {
-		// TODO better handling of this somehow?
-		panic(err)
-	}
-	return createdAt
+	return a.SCreatedAt
 }
 
 func (a *Account) UpdatedAt() time.Time {
-	updatedAt, err := time.Parse(time.RFC3339, a.updatedAt)
-	if err != nil {
-		// TODO better handling of this somehow?
-		panic(err)
-	}
-	return updatedAt
+	return a.SUpdatedAt
 }
 
 func (a *Account) Email() string {
-	return a.email
+	return a.SEmail
 }
 
 func (a *Account) PasswordHash() string {
-	return a.passwordHash
+	return a.SPasswordHash
 }
 
 func (a *Account) DisplayName() *string {
-	return a.displayName
+	return a.SDisplayName
 }
 
 func (a *Account) TouchedAt() *time.Time {
-	if a.touchedAt == nil {
-		return nil
+	if a.STouchedAt.Valid {
+		return &a.STouchedAt.Time
 	}
-	touchedAt, err := time.Parse(time.RFC3339, *a.touchedAt)
-	if err != nil {
-		// TODO better handling of this somehow?
-		panic(err)
-	}
-	return &touchedAt
+	return nil
 }

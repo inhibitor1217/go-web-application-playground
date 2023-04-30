@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"database/sql"
 
 	"github.com/google/uuid"
 	"github.com/inhibitor1217/go-web-application-playground/internal/features/account/model"
@@ -69,20 +70,20 @@ func (svc *service) Create(cx context.Context, dto *CreateDTO) (model.Account, e
 }
 
 func (svc *service) ExistsOfEmail(cx context.Context, email string) (bool, error) {
-	a := []sqlschema.Account{}
-	if err := svc.sql.Select(
+	a := sqlschema.Account{}
+	err := svc.sql.Get(
 		&a,
-		`
-		SELECT * FROM accounts
-			WHERE email = $1
-			LIMIT 1
-		`,
+		"SELECT * FROM accounts WHERE email = $1",
 		email,
-	); err != nil {
+	)
+
+	if err == sql.ErrNoRows {
+		return false, nil
+	} else if err != nil {
 		return false, errors.WithStack(err)
 	}
 
-	return len(a) > 0, nil
+	return true, nil
 }
 
 func (svc *service) FindByEmail(cx context.Context, email string) (model.Account, error) {

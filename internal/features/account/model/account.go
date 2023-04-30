@@ -13,7 +13,3 @@ type Account interface {
 	DisplayName() *string
 	TouchedAt() *time.Time
 }
-
-func TypeName() string {
-	return "Account"
-}
