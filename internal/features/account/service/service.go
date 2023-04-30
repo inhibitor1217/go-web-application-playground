@@ -12,9 +12,10 @@ import (
 )
 
 type Service interface {
-	Create(cx context.Context, dto *CreateDTO) (model.Account, error)
-	ExistsOfEmail(cx context.Context, email string) (bool, error)
+	Find(cx context.Context, id string) (model.Account, error)
 	FindByEmail(cx context.Context, email string) (model.Account, error)
+	ExistsOfEmail(cx context.Context, email string) (bool, error)
+	Create(cx context.Context, dto *CreateDTO) (model.Account, error)
 }
 
 type CreateDTO struct {
@@ -34,6 +35,57 @@ func NewService(
 	return &service{
 		sql: sql,
 	}
+}
+
+func (svc *service) Find(cx context.Context, id string) (model.Account, error) {
+	a := sqlschema.Account{}
+	err := svc.sql.Get(
+		&a,
+		"SELECT * FROM accounts WHERE id = $1",
+		id,
+	)
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	} else if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	return &a, nil
+}
+
+func (svc *service) FindByEmail(cx context.Context, email string) (model.Account, error) {
+	a := sqlschema.Account{}
+	err := svc.sql.Get(
+		&a,
+		"SELECT * FROM accounts WHERE email = $1",
+		email,
+	)
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	} else if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	return &a, nil
+}
+
+func (svc *service) ExistsOfEmail(cx context.Context, email string) (bool, error) {
+	a := sqlschema.Account{}
+	err := svc.sql.Get(
+		&a,
+		"SELECT * FROM accounts WHERE email = $1",
+		email,
+	)
+
+	if err == sql.ErrNoRows {
+		return false, nil
+	} else if err != nil {
+		return false, errors.WithStack(err)
+	}
+
+	return true, nil
 }
 
 func (svc *service) Create(cx context.Context, dto *CreateDTO) (model.Account, error) {
@@ -67,25 +119,4 @@ func (svc *service) Create(cx context.Context, dto *CreateDTO) (model.Account, e
 	}
 
 	return &a, nil
-}
-
-func (svc *service) ExistsOfEmail(cx context.Context, email string) (bool, error) {
-	a := sqlschema.Account{}
-	err := svc.sql.Get(
-		&a,
-		"SELECT * FROM accounts WHERE email = $1",
-		email,
-	)
-
-	if err == sql.ErrNoRows {
-		return false, nil
-	} else if err != nil {
-		return false, errors.WithStack(err)
-	}
-
-	return true, nil
-}
-
-func (svc *service) FindByEmail(cx context.Context, email string) (model.Account, error) {
-	return nil, errors.WithStack(errors.New("TODO"))
 }
