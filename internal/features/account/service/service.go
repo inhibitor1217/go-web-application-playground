@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/inhibitor1217/go-web-application-playground/internal/features/account/model"
+	"github.com/inhibitor1217/go-web-application-playground/internal/lib/crypto"
 	"github.com/inhibitor1217/go-web-application-playground/internal/service/db/sql/sqlschema"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
@@ -89,6 +90,11 @@ func (svc *service) ExistsOfEmail(cx context.Context, email string) (bool, error
 }
 
 func (svc *service) Create(cx context.Context, dto *CreateDTO) (model.Account, error) {
+	passwordHash, err := crypto.Hash(dto.Password)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
 	row := svc.sql.QueryRowx(
 		`
 		INSERT INTO accounts (
@@ -105,7 +111,7 @@ func (svc *service) Create(cx context.Context, dto *CreateDTO) (model.Account, e
 		`,
 		uuid.New().String(),
 		dto.Email,
-		dto.Password, // TODO hash
+		passwordHash,
 		dto.DisplayName,
 	)
 
