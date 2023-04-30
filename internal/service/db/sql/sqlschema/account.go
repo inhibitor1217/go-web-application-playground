@@ -6,13 +6,13 @@ import (
 )
 
 type Account struct {
-	SId           string       `db:"id"`
-	SCreatedAt    time.Time    `db:"created_at"`
-	SUpdatedAt    time.Time    `db:"updated_at"`
-	SEmail        string       `db:"email"`
-	SPasswordHash string       `db:"password_hash"`
-	SDisplayName  *string      `db:"display_name"`
-	STouchedAt    sql.NullTime `db:"touched_at"`
+	SId           string         `db:"id"`
+	SCreatedAt    time.Time      `db:"created_at"`
+	SUpdatedAt    time.Time      `db:"updated_at"`
+	SEmail        string         `db:"email"`
+	SPasswordHash string         `db:"password_hash"`
+	SDisplayName  sql.NullString `db:"display_name"`
+	STouchedAt    sql.NullTime   `db:"touched_at"`
 }
 
 func (a *Account) TypeName() string {
@@ -40,7 +40,10 @@ func (a *Account) PasswordHash() string {
 }
 
 func (a *Account) DisplayName() *string {
-	return a.SDisplayName
+	if a.SDisplayName.Valid {
+		return &a.SDisplayName.String
+	}
+	return nil
 }
 
 func (a *Account) TouchedAt() *time.Time {

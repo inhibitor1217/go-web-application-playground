@@ -22,9 +22,9 @@ import (
 //	@Router			/auth/sign-up [post]
 func (h *Handler) SignUp(cx *gin.Context) {
 	type request struct {
-		Email       string `json:"email" binding:"required,email"`
-		Password    string `json:"password" binding:"required,min=8,max=32"`
-		DisplayName string `json:"display_name" binding:"omitempty,min=1,max=256"`
+		Email       string  `json:"email" binding:"required,email"`
+		Password    string  `json:"password" binding:"required,min=8,max=32"`
+		DisplayName *string `json:"display_name" binding:"omitempty,min=1,max=256"`
 	}
 
 	type ok struct {

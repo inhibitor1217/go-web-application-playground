@@ -20,7 +20,7 @@ type Service interface {
 type CreateDTO struct {
 	Email       string
 	Password    string
-	DisplayName string
+	DisplayName *string
 }
 
 type service struct {
