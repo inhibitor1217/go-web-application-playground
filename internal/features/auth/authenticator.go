@@ -62,8 +62,8 @@ func (a *Authenticator) SignCookies(cx *gin.Context, p Principal) error {
 		return err
 	}
 
-	cx.SetCookie(accessTokenCookie, accessToken, int(accessTokenTTL.Seconds()), a.env.App.Domain, "", a.env.IsProduction(), true)
-	cx.SetCookie(refreshTokenCookie, refreshToken, int(refreshTokenTTL.Seconds()), a.env.App.Domain, "", a.env.IsProduction(), true)
+	cx.SetCookie(accessTokenCookie, accessToken, int(accessTokenTTL.Seconds()), "/", a.env.App.Domain, a.env.IsProduction(), true)
+	cx.Header("X-Refresh-Token", refreshToken)
 
 	return nil
 }

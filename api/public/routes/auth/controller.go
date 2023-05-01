@@ -7,6 +7,7 @@ import (
 	"github.com/inhibitor1217/go-web-application-playground/api/public/lib"
 	"github.com/inhibitor1217/go-web-application-playground/api/public/views"
 	"github.com/inhibitor1217/go-web-application-playground/internal/features/account"
+	"github.com/inhibitor1217/go-web-application-playground/internal/lib/log"
 )
 
 // SignUp godoc
@@ -122,11 +123,17 @@ func (h *Handler) SignIn(cx *gin.Context) {
 		return
 	}
 
+	principal := account.NewPrincipal(a)
+	if err := h.auth.SignCookies(cx, principal); err != nil {
+		lib.Panic(cx, err, h.l)
+		return
+	}
+
 	cx.JSON(http.StatusOK, ok{
 		Account: views.NewAccountView(a),
 	})
 
-	// TODO set session tokens
+	h.l.Debug("Signed in", log.String("account.id", a.Id()))
 }
 
 // Touch godoc

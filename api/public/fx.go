@@ -4,6 +4,7 @@ import (
 	"github.com/inhibitor1217/go-web-application-playground/api/public/middlewares"
 	"github.com/inhibitor1217/go-web-application-playground/api/public/routes"
 	"github.com/inhibitor1217/go-web-application-playground/internal/features/account"
+	"github.com/inhibitor1217/go-web-application-playground/internal/features/auth"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/env"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/http"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/jwt"
@@ -29,6 +30,7 @@ func NewHttpServerModule() fx.Option {
 
 		// features
 		account.Option,
+		auth.Option,
 
 		// middlewares
 		middlewares.Option,
