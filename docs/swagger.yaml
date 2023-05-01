@@ -110,7 +110,7 @@ paths:
       tags:
       - Authentication
   /auth/sign-out:
-    post:
+    delete:
       consumes:
       - application/json
       description: Signs out from the account session.

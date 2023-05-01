@@ -168,13 +168,14 @@ func (h *Handler) Touch(cx *gin.Context) {
 //	@Accept			json
 //	@Produce		json
 //	@Success		204
-//	@Router			/auth/sign-out [post]
+//	@Router			/auth/sign-out [delete]
 func (h *Handler) SignOut(cx *gin.Context) {
 	_, pass := lib.RequireAuth(cx)
 	if !pass {
 		return
 	}
 
-	// TODO
-	cx.AbortWithStatus(http.StatusNotImplemented)
+	h.auth.Clear(cx)
+
+	cx.Status(http.StatusNoContent)
 }

@@ -54,7 +54,7 @@ const docTemplate = `{
             }
         },
         "/auth/sign-out": {
-            "post": {
+            "delete": {
                 "description": "Signs out from the account session.",
                 "consumes": [
                     "application/json"
