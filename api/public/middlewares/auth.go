@@ -42,7 +42,7 @@ func (a *Auth) Handler() gin.HandlerFunc {
 			} else {
 				// Refreshed
 				if principal != nil {
-					cx.Set("principal", principal)
+					cx.Set(lib.Principal, principal)
 				}
 				cx.Next()
 				return
@@ -53,7 +53,7 @@ func (a *Auth) Handler() gin.HandlerFunc {
 		} else {
 			// Authenticated
 			if principal != nil {
-				cx.Set("principal", principal)
+				cx.Set(lib.Principal, principal)
 			}
 			cx.Next()
 			return

@@ -151,7 +151,7 @@ func (h *Handler) Touch(cx *gin.Context) {
 		Principal views.PrincipalView `json:"principal"`
 	}
 
-	principal, exists := cx.Get("principal")
+	principal, exists := cx.Get(lib.Principal)
 	if !exists {
 		cx.AbortWithStatus(http.StatusUnauthorized)
 		return
