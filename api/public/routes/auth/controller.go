@@ -129,6 +129,12 @@ func (h *Handler) SignIn(cx *gin.Context) {
 		return
 	}
 
+	a, err = h.accountSvc.Touch(cx.Request.Context(), a.Id())
+	if err != nil {
+		lib.Panic(cx, err, h.l)
+		return
+	}
+
 	cx.JSON(http.StatusOK, ok{
 		Account: views.NewAccountView(a),
 	})

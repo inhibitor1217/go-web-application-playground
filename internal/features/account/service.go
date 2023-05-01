@@ -9,6 +9,7 @@ type Service interface {
 	FindByEmail(cx context.Context, email string) (Account, error)
 	ExistsOfEmail(cx context.Context, email string) (bool, error)
 	Create(cx context.Context, dto *CreateDTO) (Account, error)
+	Touch(cx context.Context, id string) (Account, error)
 }
 
 type CreateDTO struct {

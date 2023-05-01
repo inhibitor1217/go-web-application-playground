@@ -179,7 +179,7 @@ func (a *tokenAuthenticator) makePrincipal(cx context.Context, subject string) (
 
 	switch paths[0] {
 	case "account":
-		a, err := a.accountSvc.Find(cx, paths[1])
+		a, err := a.accountSvc.Touch(cx, paths[1])
 		if err != nil {
 			return nil, err
 		}

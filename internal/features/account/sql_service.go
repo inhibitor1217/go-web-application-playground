@@ -112,3 +112,26 @@ func (svc *sqlService) Create(cx context.Context, dto *CreateDTO) (Account, erro
 
 	return &a, nil
 }
+
+func (svc *sqlService) Touch(cx context.Context, id string) (Account, error) {
+	row := svc.sql.QueryRowx(
+		`
+		UPDATE accounts SET
+			touched_at = NOW()
+		WHERE id = $1
+		RETURNING *
+		`,
+		id,
+	)
+
+	if row.Err() != nil {
+		return nil, errors.WithStack(row.Err())
+	}
+
+	a := sqlschema.Account{}
+	if err := row.StructScan(&a); err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	return &a, nil
+}
