@@ -9,13 +9,13 @@ import (
 
 type Handler struct {
 	accountSvc account.Service
-	auth       *auth.Authenticator
+	auth       auth.Authenticator
 	l          *log.Logger
 }
 
 func NewHandler(
 	accountSvc account.Service,
-	auth *auth.Authenticator,
+	auth auth.Authenticator,
 	l *log.Logger,
 ) *Handler {
 	return &Handler{
