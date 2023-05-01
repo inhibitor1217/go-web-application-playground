@@ -2,6 +2,7 @@ package views
 
 import (
 	"github.com/inhibitor1217/go-web-application-playground/internal/features/account"
+	"github.com/inhibitor1217/go-web-application-playground/internal/features/auth"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/optional"
 )
 
@@ -22,5 +23,17 @@ func NewAccountView(a account.Account) AccountView {
 		Email:       a.Email(),
 		DisplayName: a.DisplayName(),
 		TouchedAt:   optional.Map(a.TouchedAt(), TimestampView),
+	}
+}
+
+type PrincipalView struct {
+	Type string `json:"type"`
+	Id   string `json:"id"`
+}
+
+func NewPrincipalView(p auth.Principal) PrincipalView {
+	return PrincipalView{
+		Type: p.Type(),
+		Id:   p.Id(),
 	}
 }

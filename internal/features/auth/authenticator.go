@@ -15,6 +15,7 @@ var InvalidPrincipal = errors.New("invalid principal")
 type Authenticator interface {
 	Sign(cx *gin.Context, p Principal) error
 	Authenticate(cx *gin.Context) (Principal, error)
+	Refresh(cx *gin.Context) (Principal, error)
 }
 
 func NewAuthenticator(

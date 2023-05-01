@@ -35,6 +35,11 @@ definitions:
     - email
     - password
     type: object
+  auth.Touch.ok:
+    properties:
+      principal:
+        $ref: '#/definitions/views.PrincipalView'
+    type: object
   healthcheck.Healthcheck.view:
     properties:
       app_build:
@@ -69,6 +74,13 @@ definitions:
         type: string
     required:
     - type
+    type: object
+  views.PrincipalView:
+    properties:
+      id:
+        type: string
+      type:
+        type: string
     type: object
 info:
   contact: {}
@@ -140,14 +152,14 @@ paths:
     post:
       consumes:
       - application/json
-      description: Touches the account session and renews tokens.
+      description: Touches the session and renews tokens.
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/auth.SignUp.ok'
+            $ref: '#/definitions/auth.Touch.ok'
       summary: Touch
       tags:
       - Authentication

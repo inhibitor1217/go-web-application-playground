@@ -1,5 +1,6 @@
 package auth
 
 type Principal interface {
-	Subject() string
+	Type() string
+	Id() string
 }

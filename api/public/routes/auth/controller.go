@@ -7,6 +7,7 @@ import (
 	"github.com/inhibitor1217/go-web-application-playground/api/public/lib"
 	"github.com/inhibitor1217/go-web-application-playground/api/public/views"
 	"github.com/inhibitor1217/go-web-application-playground/internal/features/account"
+	"github.com/inhibitor1217/go-web-application-playground/internal/features/auth"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/log"
 )
 
@@ -139,18 +140,26 @@ func (h *Handler) SignIn(cx *gin.Context) {
 // Touch godoc
 //
 //	@Summary		Touch
-//	@Description	Touches the account session and renews tokens.
+//	@Description	Touches the session and renews tokens.
 //	@Tags			Authentication
 //	@Accept			json
 //	@Produce		json
-//	@Success		200	{object}	auth.SignUp.ok
+//	@Success		200	{object}	auth.Touch.ok
 //	@Router			/auth/touch [post]
 func (h *Handler) Touch(cx *gin.Context) {
 	type ok struct {
-		Account views.AccountView `json:"account"`
+		Principal views.PrincipalView `json:"principal"`
 	}
 
-	cx.JSON(http.StatusNotImplemented, "Not implemented")
+	principal, exists := cx.Get("principal")
+	if !exists {
+		cx.AbortWithStatus(http.StatusUnauthorized)
+		return
+	}
+
+	cx.JSON(http.StatusOK, ok{
+		Principal: views.NewPrincipalView(principal.(auth.Principal)),
+	})
 }
 
 // SignOut godoc

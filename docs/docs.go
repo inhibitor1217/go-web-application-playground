@@ -115,7 +115,7 @@ const docTemplate = `{
         },
         "/auth/touch": {
             "post": {
-                "description": "Touches the account session and renews tokens.",
+                "description": "Touches the session and renews tokens.",
                 "consumes": [
                     "application/json"
                 ],
@@ -130,7 +130,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/auth.SignUp.ok"
+                            "$ref": "#/definitions/auth.Touch.ok"
                         }
                     }
                 }
@@ -237,6 +237,14 @@ const docTemplate = `{
                 }
             }
         },
+        "auth.Touch.ok": {
+            "type": "object",
+            "properties": {
+                "principal": {
+                    "$ref": "#/definitions/views.PrincipalView"
+                }
+            }
+        },
         "healthcheck.Healthcheck.view": {
             "type": "object",
             "properties": {
@@ -285,6 +293,17 @@ const docTemplate = `{
                 },
                 "payload": {
                     "$ref": "#/definitions/auth.SignUp.accountExists"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "views.PrincipalView": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
                 },
                 "type": {
                     "type": "string"

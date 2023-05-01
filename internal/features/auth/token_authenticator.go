@@ -44,6 +44,23 @@ func (a *tokenAuthenticator) Sign(cx *gin.Context, p Principal) error {
 	return nil
 }
 
+func (a *tokenAuthenticator) Authenticate(cx *gin.Context) (Principal, error) {
+	accessToken, err := cx.Cookie(accessTokenCookie)
+	if err == http.ErrNoCookie {
+		cx.AbortWithStatus(http.StatusUnauthorized)
+		return nil, AuthRequired
+	} else if err != nil {
+		return nil, err
+	}
+
+	return a.authenticateFromAccessToken(cx.Request.Context(), accessToken)
+}
+
+func (a *tokenAuthenticator) Refresh(cx *gin.Context) (Principal, error) {
+	// TODO
+	return nil, nil
+}
+
 func (a *tokenAuthenticator) signAccessToken(p Principal) (string, error) {
 	claims := a.jwt.DefaultClaimsBuilder().
 		SetSubject(a.accessTokenSubject(p)).
@@ -60,18 +77,6 @@ func (a *tokenAuthenticator) signRefreshToken(p Principal) (string, error) {
 		Build()
 
 	return a.jwt.Sign(claims)
-}
-
-func (a *tokenAuthenticator) Authenticate(cx *gin.Context) (Principal, error) {
-	accessToken, err := cx.Cookie(accessTokenCookie)
-	if err == http.ErrNoCookie {
-		cx.AbortWithStatus(http.StatusUnauthorized)
-		return nil, AuthRequired
-	} else if err != nil {
-		return nil, err
-	}
-
-	return a.authenticateFromAccessToken(cx.Request.Context(), accessToken)
 }
 
 func (a *tokenAuthenticator) authenticateFromAccessToken(cx context.Context, accessToken string) (Principal, error) {
@@ -111,11 +116,11 @@ func (a *tokenAuthenticator) makePrincipal(cx context.Context, subject string) (
 }
 
 func (a *tokenAuthenticator) accessTokenSubject(p Principal) string {
-	return fmt.Sprintf("auth:access_token:%s", p.Subject())
+	return fmt.Sprintf("auth:access_token:%s:%s", p.Type(), p.Id())
 }
 
 func (a *tokenAuthenticator) refreshTokenSubject(p Principal) string {
-	return fmt.Sprintf("auth:refresh_token:%s", p.Subject())
+	return fmt.Sprintf("auth:refresh_token:%s:%s", p.Type(), p.Id())
 }
 
 func (a *tokenAuthenticator) isValidAccessTokenClaims(claims *jwt.Claims) bool {
