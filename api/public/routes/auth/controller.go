@@ -124,7 +124,7 @@ func (h *Handler) SignIn(cx *gin.Context) {
 	}
 
 	principal := account.NewPrincipal(a)
-	if err := h.auth.SignCookies(cx, principal); err != nil {
+	if err := h.auth.Sign(cx, principal); err != nil {
 		lib.Panic(cx, err, h.l)
 		return
 	}
