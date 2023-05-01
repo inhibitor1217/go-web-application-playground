@@ -38,8 +38,8 @@ func (a *tokenAuthenticator) Sign(cx *gin.Context, p Principal) error {
 		return err
 	}
 
-	cx.SetCookie(accessTokenCookie, accessToken, int(accessTokenTTL.Seconds()), "/", a.env.App.Domain, a.env.IsProduction(), true)
-	cx.Header(refreshTokenHeader, refreshToken)
+	a.signToCookie(cx, accessTokenCookie, accessToken, accessTokenTTL)
+	a.signToHeader(cx, refreshTokenHeader, refreshToken)
 
 	return nil
 }
@@ -63,16 +63,11 @@ func (a *tokenAuthenticator) WillExpire(cx *gin.Context) bool {
 		return false
 	}
 
-	claims, err := a.jwt.Parse(accessToken)
+	willExpire, err := a.tokenWillExpire(accessToken, accessTokenTTL)
 	if err != nil {
 		return false
 	}
-
-	if claims.WillExpireIn(accessTokenTTL / 2) {
-		return true
-	}
-
-	return false
+	return willExpire
 }
 
 func (a *tokenAuthenticator) Refresh(cx *gin.Context) (Principal, error) {
@@ -95,15 +90,14 @@ func (a *tokenAuthenticator) Refresh(cx *gin.Context) (Principal, error) {
 		return nil, err
 	}
 
-	cx.SetCookie(accessTokenCookie, accessToken, int(accessTokenTTL.Seconds()), "/", a.env.App.Domain, a.env.IsProduction(), true)
-	cx.Header(refreshTokenHeader, refreshToken)
+	a.signToCookie(cx, accessTokenCookie, accessToken, accessTokenTTL)
+	a.signToHeader(cx, refreshTokenHeader, refreshToken)
 
 	return principal, nil
 }
 
 func (a *tokenAuthenticator) Clear(cx *gin.Context) error {
-	cx.SetCookie(accessTokenCookie, "", 0, "/", a.env.App.Domain, a.env.IsProduction(), true)
-
+	a.clearCookie(cx, accessTokenCookie)
 	return nil
 }
 
@@ -123,6 +117,18 @@ func (a *tokenAuthenticator) signRefreshToken(p Principal) (string, error) {
 		Build()
 
 	return a.jwt.Sign(claims)
+}
+
+func (a *tokenAuthenticator) signToCookie(cx *gin.Context, name string, token string, ttl time.Duration) {
+	cx.SetCookie(name, token, int(ttl.Seconds()), "/", a.env.App.Domain, a.env.IsProduction(), true)
+}
+
+func (a *tokenAuthenticator) clearCookie(cx *gin.Context, name string) {
+	cx.SetCookie(name, "", 0, "/", a.env.App.Domain, a.env.IsProduction(), true)
+}
+
+func (a *tokenAuthenticator) signToHeader(cx *gin.Context, name string, token string) {
+	cx.Header(name, token)
 }
 
 func (a *tokenAuthenticator) authenticateFromAccessToken(cx context.Context, accessToken string) (Principal, error) {
@@ -172,6 +178,14 @@ func (a *tokenAuthenticator) makePrincipal(cx context.Context, subject string) (
 	default:
 		return nil, AuthRequired
 	}
+}
+
+func (a *tokenAuthenticator) tokenWillExpire(token string, originalTTL time.Duration) (bool, error) {
+	claims, err := a.jwt.Parse(token)
+	if err != nil {
+		return false, err
+	}
+	return claims.WillExpireIn(originalTTL / 2), nil
 }
 
 func (a *tokenAuthenticator) accessTokenSubject(p Principal) string {
