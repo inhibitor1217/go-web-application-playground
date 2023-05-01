@@ -1,19 +1,29 @@
 package jwt
 
-import "github.com/golang-jwt/jwt/v5"
+import (
+	"github.com/inhibitor1217/go-web-application-playground/internal/lib/env"
+	"github.com/pkg/errors"
+)
 
-func Sign(key []byte, claims *Claims) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString(key)
+type Jwt struct {
+	secret []byte
 }
 
-func Parse(key []byte, tokenString string) (*Claims, error) {
-	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
-		return key, nil
-	})
-	if claims, ok := token.Claims.(*Claims); ok && token.Valid {
-		return claims, nil
-	} else {
-		return nil, err
+func NewJwt(e *env.Env) (*Jwt, error) {
+	secretStr := e.Auth.JwtSecret
+	if secretStr == "" {
+		return nil, errors.New("JWT secret is not set")
 	}
+
+	return &Jwt{
+		secret: []byte(secretStr),
+	}, nil
+}
+
+func (j *Jwt) Sign(claims *Claims) (string, error) {
+	return Sign(j.secret, claims)
+}
+
+func (j *Jwt) Parse(tokenString string) (*Claims, error) {
+	return Parse(j.secret, tokenString)
 }

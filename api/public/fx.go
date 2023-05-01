@@ -6,6 +6,7 @@ import (
 	"github.com/inhibitor1217/go-web-application-playground/internal/features/account"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/env"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/http"
+	"github.com/inhibitor1217/go-web-application-playground/internal/lib/jwt"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/log"
 	"github.com/inhibitor1217/go-web-application-playground/internal/service/db/sql"
 	"github.com/inhibitor1217/go-web-application-playground/internal/service/zap"
@@ -19,6 +20,7 @@ func NewHttpServerModule() fx.Option {
 
 		// internal/lib
 		env.Option,
+		jwt.Option,
 		log.Option,
 
 		// internal/service

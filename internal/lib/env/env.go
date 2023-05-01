@@ -12,6 +12,10 @@ type App struct {
 	Build string
 }
 
+type Auth struct {
+	JwtSecret string
+}
+
 type PSQL struct {
 	Host     string
 	User     string
@@ -47,6 +51,7 @@ type Swagger struct {
 
 type Env struct {
 	App        App
+	Auth       Auth
 	PSQL       PSQL
 	PublicHttp PublicHttp
 	Swagger    Swagger
@@ -59,6 +64,8 @@ func FromEnvVars() (*Env, error) {
 		return nil, err
 	}
 	appBuild := os.Getenv("APP_BUILD")
+
+	authJwtSecret := os.Getenv("AUTH_JWT_SECRET")
 
 	psqlHost := os.Getenv("PSQL_HOST")
 	psqlUser := os.Getenv("PSQL_USER")
@@ -83,6 +90,9 @@ func FromEnvVars() (*Env, error) {
 			Name:  appName,
 			Stage: appStage,
 			Build: appBuild,
+		},
+		Auth: Auth{
+			JwtSecret: authJwtSecret,
 		},
 		PSQL: PSQL{
 			Host:     psqlHost,
