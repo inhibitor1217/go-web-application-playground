@@ -14,4 +14,6 @@ func (h *Handler) Path() string {
 	return "/accounts"
 }
 
-func (h *Handler) Register(r http.Router) {}
+func (h *Handler) Register(r http.Router) {
+	r.GET("/me", h.Me)
+}

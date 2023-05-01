@@ -89,6 +89,10 @@ func (a *tokenAuthenticator) Refresh(cx *gin.Context) (Principal, error) {
 		}
 	}
 
+	if principal == nil {
+		return nil, AuthRequired
+	}
+
 	accessToken, err = a.signAccessToken(principal)
 	if err != nil {
 		return nil, err

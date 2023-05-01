@@ -1,4 +1,9 @@
 definitions:
+  accounts.Me.ok:
+    properties:
+      account:
+        $ref: '#/definitions/views.AccountView'
+    type: object
   auth.SignIn.request:
     properties:
       email:
@@ -85,6 +90,23 @@ definitions:
 info:
   contact: {}
 paths:
+  /accounts/me:
+    get:
+      consumes:
+      - application/json
+      description: Gets the account of the authenticated user.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/accounts.Me.ok'
+      security:
+      - AccountPrincipal: []
+      summary: Get my account
+      tags:
+      - Accounts
   /auth/sign-in:
     post:
       consumes:
@@ -119,6 +141,8 @@ paths:
       responses:
         "204":
           description: No Content
+      security:
+      - Principal: []
       summary: Sign out (logout)
       tags:
       - Authentication
@@ -160,6 +184,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/auth.Touch.ok'
+      security:
+      - Principal: []
       summary: Touch
       tags:
       - Authentication

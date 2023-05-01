@@ -143,6 +143,7 @@ func (h *Handler) SignIn(cx *gin.Context) {
 //	@Tags			Authentication
 //	@Accept			json
 //	@Produce		json
+//	@Security		Principal
 //	@Success		200	{object}	auth.Touch.ok
 //	@Router			/auth/touch [post]
 func (h *Handler) Touch(cx *gin.Context) {
@@ -167,6 +168,7 @@ func (h *Handler) Touch(cx *gin.Context) {
 //	@Tags			Authentication
 //	@Accept			json
 //	@Produce		json
+//	@Security		Principal
 //	@Success		204
 //	@Router			/auth/sign-out [delete]
 func (h *Handler) SignOut(cx *gin.Context) {

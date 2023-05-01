@@ -16,6 +16,34 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/accounts/me": {
+            "get": {
+                "security": [
+                    {
+                        "AccountPrincipal": []
+                    }
+                ],
+                "description": "Gets the account of the authenticated user.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Accounts"
+                ],
+                "summary": "Get my account",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/accounts.Me.ok"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/sign-in": {
             "post": {
                 "description": "Signs in to an account using email and password.",
@@ -55,6 +83,11 @@ const docTemplate = `{
         },
         "/auth/sign-out": {
             "delete": {
+                "security": [
+                    {
+                        "Principal": []
+                    }
+                ],
                 "description": "Signs out from the account session.",
                 "consumes": [
                     "application/json"
@@ -115,6 +148,11 @@ const docTemplate = `{
         },
         "/auth/touch": {
             "post": {
+                "security": [
+                    {
+                        "Principal": []
+                    }
+                ],
                 "description": "Touches the session and renews tokens.",
                 "consumes": [
                     "application/json"
@@ -184,6 +222,14 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "accounts.Me.ok": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "$ref": "#/definitions/views.AccountView"
+                }
+            }
+        },
         "auth.SignIn.request": {
             "type": "object",
             "required": [
