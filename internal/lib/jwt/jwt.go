@@ -22,6 +22,10 @@ func NewJwt(e *env.Env) (*Jwt, error) {
 	}, nil
 }
 
+func (j *Jwt) Issuer() string {
+	return j.issuer
+}
+
 func (j *Jwt) Sign(claims *Claims) (string, error) {
 	return Sign(j.secret, claims)
 }
