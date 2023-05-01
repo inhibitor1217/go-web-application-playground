@@ -7,7 +7,6 @@ import (
 	"github.com/inhibitor1217/go-web-application-playground/api/public/lib"
 	"github.com/inhibitor1217/go-web-application-playground/api/public/views"
 	"github.com/inhibitor1217/go-web-application-playground/internal/features/account"
-	"github.com/inhibitor1217/go-web-application-playground/internal/features/auth"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/log"
 )
 
@@ -151,14 +150,13 @@ func (h *Handler) Touch(cx *gin.Context) {
 		Principal views.PrincipalView `json:"principal"`
 	}
 
-	principal, exists := cx.Get(lib.Principal)
-	if !exists {
-		cx.AbortWithStatus(http.StatusUnauthorized)
+	principal, pass := lib.RequireAuth(cx)
+	if !pass {
 		return
 	}
 
 	cx.JSON(http.StatusOK, ok{
-		Principal: views.NewPrincipalView(principal.(auth.Principal)),
+		Principal: views.NewPrincipalView(principal),
 	})
 }
 
@@ -172,5 +170,11 @@ func (h *Handler) Touch(cx *gin.Context) {
 //	@Success		204
 //	@Router			/auth/sign-out [post]
 func (h *Handler) SignOut(cx *gin.Context) {
-	cx.JSON(http.StatusNotImplemented, "Not implemented")
+	_, pass := lib.RequireAuth(cx)
+	if !pass {
+		return
+	}
+
+	// TODO
+	cx.AbortWithStatus(http.StatusNotImplemented)
 }

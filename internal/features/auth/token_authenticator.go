@@ -60,6 +60,11 @@ func (a *tokenAuthenticator) Refresh(cx *gin.Context) (Principal, error) {
 	return nil, nil
 }
 
+func (a *tokenAuthenticator) Clear(cx *gin.Context) error {
+	// TODO
+	return nil
+}
+
 func (a *tokenAuthenticator) signAccessToken(p Principal) (string, error) {
 	claims := a.jwt.DefaultClaimsBuilder().
 		SetSubject(a.accessTokenSubject(p)).

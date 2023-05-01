@@ -16,6 +16,7 @@ type Authenticator interface {
 	Sign(cx *gin.Context, p Principal) error
 	Authenticate(cx *gin.Context) (Principal, error)
 	Refresh(cx *gin.Context) (Principal, error)
+	Clear(cx *gin.Context) error
 }
 
 func NewAuthenticator(
