@@ -47,7 +47,6 @@ func (a *tokenAuthenticator) Sign(cx *gin.Context, p Principal) error {
 func (a *tokenAuthenticator) Authenticate(cx *gin.Context) (Principal, error) {
 	accessToken, err := cx.Cookie(accessTokenCookie)
 	if err == http.ErrNoCookie {
-		cx.AbortWithStatus(http.StatusUnauthorized)
 		return nil, AuthRequired
 	} else if err != nil {
 		return nil, err

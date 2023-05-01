@@ -1,15 +1,14 @@
 package middlewares
 
 import (
-	"github.com/inhibitor1217/go-web-application-playground/api/public/middlewares/cors"
-	"github.com/inhibitor1217/go-web-application-playground/api/public/middlewares/trace"
 	"github.com/inhibitor1217/go-web-application-playground/internal/lib/http"
 	"go.uber.org/fx"
 )
 
 var Option = fx.Provide(
-	middleware(cors.NewCors),
-	middleware(trace.NewTrace),
+	middleware(NewCors),
+	middleware(NewTrace),
+	middleware(NewAuth),
 )
 
 func middleware(fn interface{}) interface{} {

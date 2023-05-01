@@ -1,4 +1,4 @@
-package trace
+package middlewares
 
 import (
 	"github.com/gin-gonic/gin"
@@ -12,13 +12,11 @@ func NewTrace() *Trace {
 }
 
 func (t *Trace) Handler() gin.HandlerFunc {
-	return handler
-}
+	return func(cx *gin.Context) {
+		traceId := uuid.New()
+		cx.Set("trace_id", traceId)
+		cx.Header("X-Trace-Id", traceId.String())
 
-func handler(cx *gin.Context) {
-	traceId := uuid.New()
-	cx.Set("trace_id", traceId)
-	cx.Header("X-Trace-Id", traceId.String())
-
-	cx.Next()
+		cx.Next()
+	}
 }
