@@ -15,7 +15,7 @@ import (
 
 const (
 	accessTokenCookie  = "x_access_token"
-	refreshTokenCookie = "x_refresh_token"
+	refreshTokenHeader = "X-Refresh-Token"
 
 	accessTokenTTL  = time.Duration(30) * time.Minute
 	refreshTokenTTL = time.Duration(24) * time.Hour * 7
@@ -39,7 +39,7 @@ func (a *tokenAuthenticator) Sign(cx *gin.Context, p Principal) error {
 	}
 
 	cx.SetCookie(accessTokenCookie, accessToken, int(accessTokenTTL.Seconds()), "/", a.env.App.Domain, a.env.IsProduction(), true)
-	cx.Header("X-Refresh-Token", refreshToken)
+	cx.Header(refreshTokenHeader, refreshToken)
 
 	return nil
 }
@@ -55,13 +55,55 @@ func (a *tokenAuthenticator) Authenticate(cx *gin.Context) (Principal, error) {
 	return a.authenticateFromAccessToken(cx.Request.Context(), accessToken)
 }
 
+func (a *tokenAuthenticator) WillExpire(cx *gin.Context) bool {
+	accessToken, err := cx.Cookie(accessTokenCookie)
+	if err == http.ErrNoCookie {
+		return false
+	} else if err != nil {
+		return false
+	}
+
+	claims, err := a.jwt.Parse(accessToken)
+	if err != nil {
+		return false
+	}
+
+	if claims.WillExpireIn(accessTokenTTL / 2) {
+		return true
+	}
+
+	return false
+}
+
 func (a *tokenAuthenticator) Refresh(cx *gin.Context) (Principal, error) {
-	// TODO
-	return nil, nil
+	refreshToken := cx.GetHeader(refreshTokenHeader)
+	if refreshToken == "" {
+		return nil, AuthRequired
+	}
+
+	principal, err := a.authenticateFromRefreshToken(cx.Request.Context(), refreshToken)
+	if err != nil {
+		return nil, err
+	}
+
+	accessToken, err := a.signAccessToken(principal)
+	if err != nil {
+		return nil, err
+	}
+	refreshToken, err = a.signRefreshToken(principal)
+	if err != nil {
+		return nil, err
+	}
+
+	cx.SetCookie(accessTokenCookie, accessToken, int(accessTokenTTL.Seconds()), "/", a.env.App.Domain, a.env.IsProduction(), true)
+	cx.Header(refreshTokenHeader, refreshToken)
+
+	return principal, nil
 }
 
 func (a *tokenAuthenticator) Clear(cx *gin.Context) error {
-	// TODO
+	cx.SetCookie(accessTokenCookie, "", 0, "/", a.env.App.Domain, a.env.IsProduction(), true)
+
 	return nil
 }
 
@@ -86,11 +128,24 @@ func (a *tokenAuthenticator) signRefreshToken(p Principal) (string, error) {
 func (a *tokenAuthenticator) authenticateFromAccessToken(cx context.Context, accessToken string) (Principal, error) {
 	claims, err := a.jwt.Parse(accessToken)
 	if err != nil {
-		return nil, InvalidAuth
+		return nil, AuthRequired
 	}
 
 	if !a.isValidAccessTokenClaims(claims) {
-		return nil, InvalidAuth
+		return nil, AuthRequired
+	}
+
+	return a.makePrincipal(cx, claims.Subject)
+}
+
+func (a *tokenAuthenticator) authenticateFromRefreshToken(cx context.Context, refreshToken string) (Principal, error) {
+	claims, err := a.jwt.Parse(refreshToken)
+	if err != nil {
+		return nil, AuthRequired
+	}
+
+	if !a.isValidRefreshTokenClaims(claims) {
+		return nil, AuthRequired
 	}
 
 	return a.makePrincipal(cx, claims.Subject)
@@ -101,7 +156,7 @@ func (a *tokenAuthenticator) makePrincipal(cx context.Context, subject string) (
 	paths := strings.Split(principalSubject, ":")
 
 	if len(paths) != 2 {
-		return nil, InvalidAuth
+		return nil, AuthRequired
 	}
 
 	switch paths[0] {
@@ -111,11 +166,11 @@ func (a *tokenAuthenticator) makePrincipal(cx context.Context, subject string) (
 			return nil, err
 		}
 		if a == nil {
-			return nil, InvalidPrincipal
+			return nil, AuthRequired
 		}
 		return account.NewPrincipal(a), nil
 	default:
-		return nil, InvalidPrincipal
+		return nil, AuthRequired
 	}
 }
 

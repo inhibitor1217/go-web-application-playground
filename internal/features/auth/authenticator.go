@@ -9,12 +9,11 @@ import (
 )
 
 var AuthRequired = errors.New("authentication required")
-var InvalidAuth = errors.New("invalid authentication")
-var InvalidPrincipal = errors.New("invalid principal")
 
 type Authenticator interface {
 	Sign(cx *gin.Context, p Principal) error
 	Authenticate(cx *gin.Context) (Principal, error)
+	WillExpire(cx *gin.Context) bool
 	Refresh(cx *gin.Context) (Principal, error)
 	Clear(cx *gin.Context) error
 }

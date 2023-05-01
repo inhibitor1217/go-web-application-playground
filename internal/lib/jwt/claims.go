@@ -10,6 +10,10 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
+func (c *Claims) WillExpireIn(ttl time.Duration) bool {
+	return time.Until(c.ExpiresAt.Time) < ttl
+}
+
 type ClaimsBuilder struct {
 	claims *Claims
 }

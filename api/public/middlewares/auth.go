@@ -55,6 +55,12 @@ func (a *Auth) Handler() gin.HandlerFunc {
 			if principal != nil {
 				cx.Set(lib.Principal, principal)
 			}
+
+			// Refresh the access token if it is about to expire
+			if a.auth.WillExpire(cx) {
+				a.auth.Refresh(cx) // ignore errors here
+			}
+
 			cx.Next()
 			return
 		}
