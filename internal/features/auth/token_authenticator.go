@@ -71,17 +71,25 @@ func (a *tokenAuthenticator) WillExpire(cx *gin.Context) bool {
 }
 
 func (a *tokenAuthenticator) Refresh(cx *gin.Context) (Principal, error) {
+	var principal Principal
+
+	accessToken, err := cx.Cookie(accessTokenCookie)
+	if err == nil {
+		p, err := a.authenticateFromAccessToken(cx.Request.Context(), accessToken)
+		if err == nil {
+			principal = p
+		}
+	}
+
 	refreshToken := cx.GetHeader(refreshTokenHeader)
-	if refreshToken == "" {
-		return nil, AuthRequired
+	if refreshToken != "" {
+		p, err := a.authenticateFromRefreshToken(cx.Request.Context(), refreshToken)
+		if err == nil {
+			principal = p
+		}
 	}
 
-	principal, err := a.authenticateFromRefreshToken(cx.Request.Context(), refreshToken)
-	if err != nil {
-		return nil, err
-	}
-
-	accessToken, err := a.signAccessToken(principal)
+	accessToken, err = a.signAccessToken(principal)
 	if err != nil {
 		return nil, err
 	}
