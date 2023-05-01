@@ -6,6 +6,7 @@ import (
 )
 
 type Jwt struct {
+	issuer string
 	secret []byte
 }
 
@@ -16,6 +17,7 @@ func NewJwt(e *env.Env) (*Jwt, error) {
 	}
 
 	return &Jwt{
+		issuer: e.App.Name,
 		secret: []byte(secretStr),
 	}, nil
 }
@@ -26,4 +28,9 @@ func (j *Jwt) Sign(claims *Claims) (string, error) {
 
 func (j *Jwt) Parse(tokenString string) (*Claims, error) {
 	return Parse(j.secret, tokenString)
+}
+
+func (j *Jwt) DefaultClaimsBuilder() *ClaimsBuilder {
+	return NewClaimsBuilder().
+		SetIssuer(j.issuer)
 }

@@ -43,3 +43,9 @@ func (b *ClaimsBuilder) SetIssuedAt(issuedAt time.Time) *ClaimsBuilder {
 	b.claims.IssuedAt = jwt.NewNumericDate(issuedAt)
 	return b
 }
+
+func (b *ClaimsBuilder) SetTTL(issuedAt time.Time, ttl time.Duration) *ClaimsBuilder {
+	b.claims.IssuedAt = jwt.NewNumericDate(issuedAt)
+	b.claims.ExpiresAt = jwt.NewNumericDate(issuedAt.Add(ttl))
+	return b
+}

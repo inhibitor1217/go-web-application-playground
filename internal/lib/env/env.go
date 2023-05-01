@@ -7,9 +7,10 @@ import (
 )
 
 type App struct {
-	Name  string
-	Stage AppStage
-	Build string
+	Domain string
+	Name   string
+	Stage  AppStage
+	Build  string
 }
 
 type Auth struct {
@@ -58,6 +59,7 @@ type Env struct {
 }
 
 func FromEnvVars() (*Env, error) {
+	appDomain := os.Getenv("APP_DOMAIN")
 	appName := os.Getenv("APP_NAME")
 	appStage, err := parseAppStage(os.Getenv("APP_STAGE"))
 	if err != nil {
@@ -87,9 +89,10 @@ func FromEnvVars() (*Env, error) {
 
 	return &Env{
 		App: App{
-			Name:  appName,
-			Stage: appStage,
-			Build: appBuild,
+			Domain: appDomain,
+			Name:   appName,
+			Stage:  appStage,
+			Build:  appBuild,
 		},
 		Auth: Auth{
 			JwtSecret: authJwtSecret,
